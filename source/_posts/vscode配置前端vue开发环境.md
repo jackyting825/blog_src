@@ -26,6 +26,12 @@ tags:
 
     Vetur : vscode的vue工具插件
 
+    px2rem : 将像素值转为rem插件
+
+    下面是markdown相关的插件
+
+    Markdown-TOC : 对markdown文档生成目录的插件
+
 2.安装好上述插件后,对其进行配置设置
 
     在文件->首选项->设置->用户设置里面写入以下配置
