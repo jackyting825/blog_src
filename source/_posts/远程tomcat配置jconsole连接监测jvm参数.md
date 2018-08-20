@@ -17,7 +17,7 @@ tags:
 
 1.在tomcat的bin目录下catalina.sh文件首部增加以下配置(注意:不用换行)
 
-    CATALINA_OPTS="-Dfile.encoding=UTF-8 -server -Xms256m -Xmx256m -Djava.rmi.server.hostname=0.0.0.0 -Dcom.sun.management.jmxremote -Dcom.sun.management.jmxremote.port=10001 -Dcom.sun.management.jmxremote.authenticate=true -Dcom.sun.management.jmxremote.ssl=false -Dcom.sun.management.jmxremote.password.file=./conf/jmxremote.password -Dcom.sun.management.jmxremote.access.file=./conf/jmxremote.access"
+    CATALINA_OPTS="-Dfile.encoding=UTF-8 -server -Xms256m -Xmx256m -Djava.rmi.server.hostname=0.0.0.0 -Dcom.sun.management.jmxremote -Dcom.sun.management.jmxremote.port=10001 -Dcom.sun.management.jmxremote.rmi.port=10001 -Dcom.sun.management.jmxremote.authenticate=true -Dcom.sun.management.jmxremote.ssl=false -Dcom.sun.management.jmxremote.password.file=./conf/jmxremote.password -Dcom.sun.management.jmxremote.access.file=./conf/jmxremote.access"
 
     其中-Xms256m -Xmx256m是配置jvm虚拟机参数的,最小堆内存和最大堆内存,推荐保持一致,如果不一致会增加gc回收次数,
     对性能有严重影响.
@@ -46,4 +46,6 @@ tags:
     5.针对为什么在startup.sh文件中增加对应的-Djava.rmi.server.hostname=0.0.0.0配置,主要是因为在不加配置的情况下,
     用shutdown.sh关闭tomcat的时候会报该端口已经被占用,因为关闭tomcat时候，还会读取catalina.sh.所以推荐在startup.sh文件中配置
     6.一般情况下远程服务器系统是开启防火墙的,所以还需要将10001端口配置为允许访问
+    7.如果配置一切无误,还是连接不上的话,请将0.0.0.0换成对应的IP地址.因为亲测在Ubuntu下0.0.0.0能连接成功,
+    但是在centos7下连接不成功
 
