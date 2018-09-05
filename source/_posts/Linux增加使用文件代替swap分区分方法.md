@@ -16,19 +16,19 @@ tags:
 
 1.创建要作为swap分区的文件:增加1GB大小的交换分区，则命令写法如下，其中的count等于想要的块的数量（bs*count=文件大小）
 
-`sudo dd if=/dev/zero of=/root/swapfile bs=1M count=1024`
+`sudo dd if=/dev/zero of=/swapfile bs=1M count=1024`
 
 2.格式化为交换分区文件,建立swap的文件系统
 
-`sudo mkswap /root/swapfile`
+`sudo mkswap /swapfile`
 
 3.启用交换分区文件
 
-`sudo swapon /root/swapfile`
+`sudo swapon /swapfile`
 
 4.使系统开机时自启用，在文件/etc/fstab中添加一行(可使用vim打开文件进行编辑)：
 
-`/root/swapfile swap swap defaults 0 0`
+`/swapfile swap swap defaults 0 0`
 
 5.验证结果,执行free 命令查看是否有交换分区
 
