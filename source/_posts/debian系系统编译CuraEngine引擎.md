@@ -59,7 +59,8 @@ tags: linux
     git clone https://github.com/Ultimaker/libArcus.git --depth=1
 
   3.5 进入到libArcus目录,执行
-  
+
+    mkdir build && cd build
     cmake ..
 
   3.6 

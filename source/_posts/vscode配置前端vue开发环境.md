@@ -39,6 +39,7 @@ tags:
   ```json
   {
     "workbench.startupEditor": "newUntitledFile",
+    "window.title": "${dirty}${activeEditorLong}${separator}${rootName}${separator}${appName}",
     "extensions.ignoreRecommendations": false,
     "workbench.iconTheme": "file-icons",
     "workbench.colorTheme": "Monokai",
