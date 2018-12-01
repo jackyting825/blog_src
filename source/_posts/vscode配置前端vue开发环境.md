@@ -30,7 +30,7 @@ tags:
 
     下面是markdown相关的插件
 
-    Markdown-TOC : 对markdown文档生成目录的插件
+    Markdown-TOC : 对markdown文档生成目录的插件,有2个,请选择作者为AlanWalk的
 
 2.安装好上述插件后,对其进行配置设置
 
@@ -80,3 +80,7 @@ tags:
     }
   }
   ```
+3.vscode 1.29版本以上markdown-toc生成目录默认是有问题的,1.29版本以下能够直接正常使用
+
+        1.29版本以上,请在file->preferences->setting->text editor中找到Eol配置的地方,设置为\n即可.
+        详细情况见 https://github.com/AlanWalk/markdown-toc/issues/65
