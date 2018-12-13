@@ -1,6 +1,6 @@
 ---
 title: vscode配置前端vue开发环境
-date: 2018-06-19 10:42:39
+date: 2018-12-13 14:05:39
 tags:
   - vscode
 ---
@@ -32,7 +32,7 @@ tags:
 
     Markdown-TOC : 对markdown文档生成目录的插件,有2个,请选择作者为AlanWalk的
 
-2.安装好上述插件后,对其进行配置设置
+2.安装好上述插件后,对其进行配置设置(2018-12-13更 v.1.29.1)
 
     在文件->首选项->设置->用户设置里面写入以下配置
 
@@ -68,7 +68,7 @@ tags:
     },
     "editor.tabSize": 2,
     "prettier.eslintIntegration": true,
-    "vetur.format.defaultFormatter": {
+    "vetur.format.defaultFormatterOptions": {
         "html": "prettier",
         "css": "prettier",
         "postcss": "prettier",
@@ -76,9 +76,17 @@ tags:
         "less": "prettier",
         "js": "prettier",
         "ts": "prettier",
-        "stylus": "stylus-supremacy"
-    }
-  }
+        "stylus": "stylus-supremacy",
+        "wrap_attributes": "force-aligned",
+        "prettier": {
+            "semi": false,
+            "singleQuote": true
+        }
+    },
+    "eslint.alwaysShowStatus": true,
+    "window.titleBarStyle": "custom",
+    "files.eol": "\n"
+}
   ```
 3.vscode 1.29版本以上markdown-toc生成目录默认是有问题的,1.29版本以下能够直接正常使用
 
