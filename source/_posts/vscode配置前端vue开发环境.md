@@ -32,7 +32,7 @@ tags:
 
     Markdown-TOC : 对markdown文档生成目录的插件,有2个,请选择作者为AlanWalk的
 
-2.安装好上述插件后,对其进行配置设置(2018-12-13更 v.1.29.1)
+2.安装好上述插件后,对其进行配置设置(2018-12-15更 v.1.30.0)
 
     在文件->首选项->设置->用户设置里面写入以下配置
 
@@ -92,3 +92,12 @@ tags:
 
         1.29版本以上,请在file->preferences->setting->text editor中找到Eol配置的地方,设置为\n即可.
         详细情况见 https://github.com/AlanWalk/markdown-toc/issues/65
+
+4.vscode 1.30版本在file->preferences->setting下找不到打开setting.json文件的入口了.如下图,可以在系统路径下找到该文件编辑即可.
+
+        文件路径
+        Windows: %APPDATA%\Code\User\settings.json
+        macOS: $HOME/Library/Application Support/Code/User/settings.json
+        Linux: $HOME/.config/Code/User/settings.json
+
+![](/images/vscode.1.30.png)
