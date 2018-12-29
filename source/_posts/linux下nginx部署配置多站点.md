@@ -28,12 +28,29 @@ tags:
       server_name www.siteA.com siteA.com; # 站点域名
       root /home/user/www/blog; # 站点根目录
       index index.html index.htm index.php; # 默认导航页
+
+      #rewrite ^(.*) https://$host$1 permanent; #重定向到https
+
       location / {
         # WordPress固定链接URL重写
         if (!-e $request_filename) {
           rewrite (.*) /index.php;
         }
       }
+      location / {
+        # WordPress固定链接URL重写
+        if (!-e $request_filename) {
+          rewrite (.*) /index.php;
+        }
+      }
+      location ^~ /device/ {
+    	  proxy_pass http://127.0.0.1:8080;
+      }
+      location ^~ /upload/ {  
+        root  /aaa/bbb;
+        expires   7d;
+      }
+    }
 
 3.跟第二步一样,创建siteB的配置文件.("server_name”和"root”目录的内容和siteA不同)
 
@@ -46,12 +63,23 @@ tags:
       server_name www.siteB.com siteB.com; # 站点域名
       root /home/user/www/blog; # 站点根目录
       index index.html index.htm index.php; # 默认导航页
+
+      #rewrite ^(.*) https://$host$1 permanent; #重定向到https
+
       location / {
         # WordPress固定链接URL重写
         if (!-e $request_filename) {
           rewrite (.*) /index.php;
         }
       }
+      location ^~ /device/ {
+    	  proxy_pass http://127.0.0.1:8080;
+      }
+      location ^~ /upload/ {  
+        root  /aaa/bbb;
+        expires   7d;
+      }
+    }
 
 4.打开编辑nginx的配置文件
 
@@ -102,3 +130,29 @@ nginx禁止ip访问的小技巧:
     location ^~ /forum/ {
       deny all;
     }
+
+7.nginx常用的配置选项模板
+    /etc/nginx/nginx.conf
+
+    underscores_in_headers on; #自定义Header中含有下划线的情况 必须定义
+    gzip  on;
+    gzip_min_length 1k;
+    gzip_buffers 16 64k;
+    gzip_http_version 1.1;
+    gzip_comp_level 6;
+    gzip_types text/plain application/javascript application/x-javascript text/css application/xml text/javascript application/x-httpd-php image/jpeg image/gif image/png;
+    gzip_vary on;
+    gzip_disable "MSIE [1-6]\.";
+    #proxy_connect_timeout 600;  #nginx跟后端服务器连接超时时间(代理连接超时)
+    #proxy_read_timeout    600;  #连接成功后，后端服务器响应时间(代理接收超时)
+    #proxy_send_timeout    600;  #后端服务器数据回传时间(代理发送超时)
+    proxy_buffer_size     32k;  #设置代理服务器（nginx）保存用户头信息的缓冲区大小
+    proxy_buffers         4 32k;#proxy_buffers缓冲区，网页平均在32k以下的话，这样设置
+    proxy_busy_buffers_size  64k;           #高负荷下缓冲大小（proxy_buffers*2）
+    proxy_temp_file_write_size  1024m;       #设定缓存文件夹大小，大于这个值，将从upstream服务器传
+    client_max_body_size 100M;
+    # 给后端服务器暴露获取客户端真实IP地址的头
+    proxy_set_header X-Real-IP $remote_addr;
+    proxy_set_header REMOTE-HOST $remote_addr;
+    proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+
