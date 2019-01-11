@@ -79,6 +79,10 @@ tags:
         root  /aaa/bbb;
         expires   7d;
       }
+      # websocket地址
+      location ^~ /ws {
+		    proxy_pass http://127.0.0.1:10002;
+	    }
     }
 
 4.打开编辑nginx的配置文件
@@ -143,16 +147,23 @@ nginx禁止ip访问的小技巧:
     gzip_types text/plain application/javascript application/x-javascript text/css application/xml text/javascript application/x-httpd-php image/jpeg image/gif image/png;
     gzip_vary on;
     gzip_disable "MSIE [1-6]\.";
+
     #proxy_connect_timeout 600;  #nginx跟后端服务器连接超时时间(代理连接超时)
-    #proxy_read_timeout    600;  #连接成功后，后端服务器响应时间(代理接收超时)
-    #proxy_send_timeout    600;  #后端服务器数据回传时间(代理发送超时)
+    
     proxy_buffer_size     32k;  #设置代理服务器（nginx）保存用户头信息的缓冲区大小
     proxy_buffers         4 32k;#proxy_buffers缓冲区，网页平均在32k以下的话，这样设置
     proxy_busy_buffers_size  64k;           #高负荷下缓冲大小（proxy_buffers*2）
     proxy_temp_file_write_size  1024m;       #设定缓存文件夹大小，大于这个值，将从upstream服务器传
     client_max_body_size 100M;
+
     # 给后端服务器暴露获取客户端真实IP地址的头
     proxy_set_header X-Real-IP $remote_addr;
     proxy_set_header REMOTE-HOST $remote_addr;
     proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
 
+    # websocket 支持
+    proxy_http_version 1.1;
+    proxy_set_header Upgrade $http_upgrade;
+    proxy_set_header Connection "upgrade";
+    proxy_read_timeout    600;  #连接成功后，后端服务器响应时间(代理接收超时)
+    proxy_send_timeout    600;  #后端服务器数据回传时间(代理发送超时)
