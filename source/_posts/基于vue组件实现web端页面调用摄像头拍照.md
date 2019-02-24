@@ -54,7 +54,11 @@ export default {
         navigator.getUserMedia({ video: true },
           (stream) => {
             this.track = stream.getTracks()[0]  // 通过这个关闭摄像头
-            this.video.src = window.URL.createObjectURL(stream)
+            try {
+              this.video.src = window.URL.createObjectURL(stream) // chrome版本<=70
+            } catch (e) {
+              this.video.srcObject = stream // chrome版本>70
+            }
             this.video.onloadedmetadata = (e) => {
               console.log(e)
               this.video.play()
