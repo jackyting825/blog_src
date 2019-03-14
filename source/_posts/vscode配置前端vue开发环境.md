@@ -26,6 +26,8 @@ tags:
 
     Vetur : vscode的vue工具插件
 
+    HTML CSS Support : 在标签中class属性的时候,提示class的名称
+
     px2rem : 将像素值转为rem插件
 
     下面是markdown相关的插件
