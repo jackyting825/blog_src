@@ -817,5 +817,5 @@ images: images
 # Theme version
 version: 5.1.4
 
-# Fireworks
-fireworks: true
+# Fireworks,关闭点击爆炸效果
+fireworks: false
