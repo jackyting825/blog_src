@@ -819,3 +819,10 @@ version: 5.1.4
 
 # Fireworks,关闭点击爆炸效果
 fireworks: false
+
+# utterances评论功能
+utterances:
+  enable: true
+  repo: jackyting825/jackyting825.github.io
+  issue_term: title #og:title [ISSUE NUMBER] or [SPECIFIC TERM]
+  theme: github-light #or github-dark
