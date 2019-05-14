@@ -109,7 +109,7 @@ public class PDFUtils {
         }
         // 新建一个PDF文本剥离器
         PDFTextStripper stripper = new PDFTextStripper();
-        stripper.setStartPage(0); // 开始提取页数
+        stripper.setStartPage(startPage); // 开始提取页数
         stripper.setEndPage(endPage); // 结束提取页数
         // 从PDF文档对象中剥离文本
         String result = stripper.getText(pdDocument);
