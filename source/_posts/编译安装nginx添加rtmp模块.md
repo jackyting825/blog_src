@@ -49,7 +49,27 @@ tags:
 
 `ls -l /opt/nginx/` // 查看opt目录下nginx目录的内容
 
-`sudo /opt/nginx/sbin/nginx` // 启动nginx服务
+`sudo /opt/nginx/sbin/nginx` // 启动nginx服务,默认只能用root启动,所以加sudo
+
+`sudo chmod u+s /opt/nginx/sbin/nginx` // 为nginx文件加上setuid标志.(setuid只对文件有效).设置后可以通过普通用户就可以启动
+
+
+* 关于chmod扩展:如果是一个可执行文件, 那么在执行时, 一般该文件只拥有调用该文件的用户具有的权限. 而setuid, setgid 可以来改变这种设置:
+
+  setuid: 设置使文件在执行阶段具有文件所有者的权限
+  
+  setgid: 该权限只对目录有效. 目录被设置该位后, 任何用户在此目录下创建的文件都具有和该目录所属的组相同的组.
+  
+  sticky bit: 该位可以理解为防删除位. 一个文件是否可以被某用户删除, 主要取决于该文件所属的组是否对该用户具有写权限. 如果没有写权限, 则这个目录下的所有文件都不能被删除, 同时也不能添加新的文件. 如果希望用户能够添加文件但同时不能删除文件, 则可以对文件使用sticky bit位. 设置该位后, 就算用户对目录具有写权限, 也不能删除该文件,该权限只对目录有效.
+
+  具体使用如下
+
+  chmod u+s temp — 为temp文件加上setuid标志. (setuid 只对文件有效)
+  
+  chmod g+s tempdir — 为tempdir目录加上setgid标志 (setgid 只对目录有效)
+  
+  chmod o+t temp — 为temp文件加上sticky标志 (sticky只对文件有效) *
+
 
 浏览器打开localhost,正常就能打开nginx默认的首页面
 
@@ -86,7 +106,7 @@ tags:
 
 `sudo /opt/nginx/sbin/nginx -s reload`
 
-测试rtmp推流
+#### 测试rtmp推流
 
 `ffmpeg -re -i ./龙珠超.布罗利.mp4 -vcodec libx264 -vprofile baseline -acodec aac -ar 44100 -strict -2 -ac 1 -f flv -s 1280x720 -q 10 rtmp://192.168.100.31:1935/rtmplive_demo/longzhuchao`
 
@@ -100,7 +120,7 @@ tags:
 ![](/images/push_rtmp_res.png)
 
 
-测试HLS推流
+#### 测试HLS推流
 
 `ffmpeg -re -i ./龙珠超.布罗利.mp4 -vcodec libx264 -vprofile baseline -acodec aac -ar 44100 -strict -2 -ac 1 -f flv -s 1280x720 -q 10 rtmp://192.168.100.31:1935/hlsvideo/longzhuchao`
 
