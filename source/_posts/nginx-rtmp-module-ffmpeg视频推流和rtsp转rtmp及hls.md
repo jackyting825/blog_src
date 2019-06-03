@@ -1,5 +1,5 @@
 ---
-title: nginx-rtmp-module-ffmpeg视频推流和rtsp转流rtmp
+title: nginx-rtmp-module-ffmpeg视频推流和rtsp转rtmp及hls
 date: 2019-05-31 16:53:11
 tags:
   - nginx
@@ -68,14 +68,29 @@ ffmpeg参数:
 
     在执行转码命令过程中,可能会报信息类似 Past duration 0.999992 too large 的警告错误,经查询资料,是在-r参数后面
     指定的视频帧率参数导致的.rtsp://184.72.239.149/vod/mp4://BigBuckBunny_175k.mov这个地址是网络上的地址,
-    刚开始copy网友命令的时候参数值为25,就会报以上错误.使用VLC media player播放其rtsp地址,
-    发现其rtsp源本身视频就很模糊,所以但是后面直接改为10就不报错的.所以这个值得根据具体的情况进行调整
+    可使用vlc media player查看源的帧率而设置
 
 #### 使用VLC media player测试播放转换后的rtmp地址
 
 打开VLC media player播放器.在工具栏"媒体->打开网络串流"然后输入rtmp://127.0.0.1:1935/live/demo点击确定即可进行直播预览转换后的rtmp视频流
 
 ![](/images/rtmp-result.png)
+
+### ffmpeg将rtsp转码为hls
+
+使用ffmpeg命令,将rtsp转码为hls.ffmpeg参数项很多,未对其深究,直接参考网友的命令的.-i后面是rtsp流地址.
+
+`ffmpeg -f rtsp -rtsp_transport tcp -i rtsp://192.168.100.2/longzhu/demo_2 -r 23 -f hls -hls_time 4 -hls_list_size 5 -hls_wrap 10 /home/bz/Desktop/h5live/longzhuchao.m3u8`
+
+    在执行转码命令过程中,可能会报信息类似 Past duration 0.999992 too large 的警告错误,经查询资料,是在-r参数后面
+    指定的视频帧率参数导致的.rtsp://184.72.239.149/vod/mp4://BigBuckBunny_175k.mov这个地址是网络上的地址,
+    可使用vlc media player查看源的帧率而设置
+
+#### 使用VLC media player测试播放转换后的hls地址(m3u8文件)
+
+打开VLC media player播放器.在工具栏"媒体->打开网络串流"然后输入http://192.168.100.31/hlsvideo/longzhuchao.m3u8点击确定即可进行直播预览转换后的rtmp视频流,该地址是在nginx中配置了的
+
+![](/images/hls-result.png)
 
 ### ffmpeg推送视频文件到rtsp服务器
 
