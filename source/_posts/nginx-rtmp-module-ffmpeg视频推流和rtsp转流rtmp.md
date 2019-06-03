@@ -91,7 +91,7 @@ ffmpeg参数:
 
 `ffmpeg -re -i ./龙珠超.布罗利.mp4 -vcodec copy -acodec copy -b:v 800k -b:a 32k -f flv rtmp://192.168.100.31:1935/rtmplive_demo/demo_3`
 
-    注:rtmp地址中的rtmplive_demo必须和nginx中配置的application名称一致才能推流成功
+    注:rtmp地址中的rtmplive_demo必须和nginx中配置的application名称一致才能推流成功,192.168.100.31是我的一台虚拟机
 
 #### 使用VLC media player测试播放推流后rtmp地址
 
