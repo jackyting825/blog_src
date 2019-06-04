@@ -161,3 +161,13 @@ docker run -d --name nginx1.0 -p 8080:80 nginx # 主机的 8080 端口映射到�
 `docker save -o /home/xxx/images/nginx.tar nginx1.0` // 将 nginx1.0 镜像备份到/home/xxx/images/目录下
 
 `docker load --input /home/xxx/images/nginx.tar` // 导入镜像
+
+#### docker挂载物理机本地目录
+
+docker可以支持把一个宿主机上的目录挂载到镜像里。
+
+`docker run -itd -v /home/bz/Downloads:/home/Downloads nginx1.0` // 通过-v参数，冒号前为宿主机目录，必须为绝对路径，冒号后为镜像内挂载的路径
+
+默认挂载的路径权限为读写。如果指定为只读可以用：ro
+
+`docker run -itd -v /home/bz/Downloads:/home/Downloads:ro nginx1.0`
