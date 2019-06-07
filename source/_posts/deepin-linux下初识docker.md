@@ -34,7 +34,7 @@ https://wiki.deepin.org/wiki/Docker#.E5.9C.A8_Deepin_.E4.B8.AD.E5.AE.89.E8.A3.85
 
 4.查看密钥是否安装成功
 
-`sudo apt fingerprint 0EBFCD88`
+`sudo apt-get fingerprint 0EBFCD88`
 
 如果成功会提示
 
