@@ -138,32 +138,131 @@ nginx禁止ip访问的小技巧:
 7.nginx常用的配置选项模板
     /etc/nginx/nginx.conf
 
-    underscores_in_headers on; #自定义Header中含有下划线的情况 必须定义
-    gzip  on;
-    gzip_min_length 1k;
-    gzip_buffers 16 64k;
-    gzip_http_version 1.1;
-    gzip_comp_level 6;
-    gzip_types text/plain application/javascript application/x-javascript text/css application/xml text/javascript application/x-httpd-php image/jpeg image/gif image/png;
-    gzip_vary on;
-    gzip_disable "MSIE [1-6]\.";
+    http {
+      sendfile on;
+      tcp_nopush on;
+      tcp_nodelay on;
+      keepalive_timeout 65;
+      types_hash_max_size 2048;
+      server_tokens off; # 关闭nginx版本标识
 
-    #proxy_connect_timeout 600;  #nginx跟后端服务器连接超时时间(代理连接超时)
-    
-    proxy_buffer_size     32k;  #设置代理服务器（nginx）保存用户头信息的缓冲区大小
-    proxy_buffers         4 32k;#proxy_buffers缓冲区，网页平均在32k以下的话，这样设置
-    proxy_busy_buffers_size  64k;           #高负荷下缓冲大小（proxy_buffers*2）
-    proxy_temp_file_write_size  1024m;       #设定缓存文件夹大小，大于这个值，将从upstream服务器传
-    client_max_body_size 100M;
+      underscores_in_headers on; #自定义Header中含有下划线的情况 必须定义
+      gzip  on;
+      gzip_min_length 1k;
+      gzip_buffers 16 64k;
+      gzip_http_version 1.1;
+      gzip_comp_level 6;
+      gzip_types text/plain application/javascript application/x-javascript text/css application/xml text/javascript application/x-httpd-php image/jpeg image/gif image/png;
+      gzip_vary on;
+      gzip_disable "MSIE [1-6]\.";
 
-    # 给后端服务器暴露获取客户端真实IP地址的头
-    proxy_set_header X-Real-IP $remote_addr;
-    proxy_set_header REMOTE-HOST $remote_addr;
-    proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+      #proxy_connect_timeout 600;  #nginx跟后端服务器连接超时时间(代理连接超时)
+      
+      proxy_buffer_size     32k;  #设置代理服务器（nginx）保存用户头信息的缓冲区大小
+      proxy_buffers         4 32k;#proxy_buffers缓冲区，网页平均在32k以下的话，这样设置
+      proxy_busy_buffers_size  64k;           #高负荷下缓冲大小（proxy_buffers*2）
+      proxy_temp_file_write_size  1024m;       #设定缓存文件夹大小，大于这个值，将从upstream服务器传
+      client_max_body_size 100M;
 
-    # websocket 支持
-    proxy_http_version 1.1;
-    proxy_set_header Upgrade $http_upgrade;
-    proxy_set_header Connection "upgrade";
-    proxy_read_timeout    600;  #连接成功后，后端服务器响应时间(代理接收超时)
-    proxy_send_timeout    600;  #后端服务器数据回传时间(代理发送超时)
+      # 给后端服务器暴露获取客户端真实IP地址的头
+      proxy_set_header X-Real-IP $remote_addr;
+      proxy_set_header REMOTE-HOST $remote_addr;
+      proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+
+      # websocket 支持
+      proxy_http_version 1.1;
+      proxy_set_header Upgrade $http_upgrade;
+      proxy_set_header Connection "upgrade";
+      proxy_read_timeout    600;  #连接成功后，后端服务器响应时间(代理接收超时)
+      proxy_send_timeout    600;  #后端服务器数据回传时间(代理发送超时)
+    }
+
+8.站点配置文件样例,例如:/etc/nginx/vhost/a.conf
+
+    server {
+      listen          80;
+      server_name     www.aaa.com  aaa.com;
+      root            /opt/pages/;
+      index           index.html index.htm;
+
+      # Cookie的HttpOnly属性，指示浏览器不要在除HTTP（和HTTPS)请求之外暴露Cookie。一个有HttpOnly属性的Cookie，是不可以通过例如调用JavaScript(引用document.cookie)这种非HTTP方式来访问。因此，也不可能通过跨域脚本（一种非常普通的攻击技术）来偷走这种Cookie。
+      add_header                  Set-Cookie "HttpOnly";
+      # Cookie的Secure属性，意味着保持Cookie通信只限于加密传输，指示浏览器仅仅在通过安全/加密连接才能使用该Cookie。如果一个Web服务器从一个非安全连接里设置了一个带有secure属性的Cookie，当Cookie被发送到客户端时，它仍然能通过中间人攻击来拦截
+      add_header                  Set-Cookie "Secure";
+      # X-Frame-Options HTTP 响应头是用来给浏览器指示允许一个页面可否在 <frame>, <iframe> 或者 <object> 中展现的标记。网站可以使用此功能，来确保自己网站的内容没有被嵌到别人的网站中去，也从而避免了点击劫持 (clickjacking) 的攻击。它有三个可选择项：(DENY：表示该页面不允许在 frame 中展示，即便是在相同域名的页面中嵌套也不允许；SAMEORIGIN：表示该页面可以在相同域名页面的 frame 中展示；ALLOW-FROM uri地址：表示该页面可以在指定来源的 frame 中展示；)
+      add_header                  X-Frame-Options "SAMEORIGIN";
+
+      # 禁用OPTIONS TRACE不安全方法,屏蔽GET、POST、之外的HTTP方法
+      if ($request_method !~* GET|POST) {
+          return 403;
+      }
+
+      # 跨域配置
+      location / {
+        add_header Access-Control-Allow-Origin *;
+        add_header Access-Control-Allow-Methods 'GET, POST, OPTIONS';
+        add_header Access-Control-Allow-Headers 'DNT,X-Mx-ReqToken,Keep-Alive,User-Agent,X-Requested-With,If-Modified-Since,Cache-Control,Content-Type,Authorization';
+
+        if ($request_method = 'OPTIONS') {
+          return 204;
+        }
+      }
+
+      # 转发以/api/开头的请求
+      location ^~ /api/ {
+        proxy_pass http://127.0.0.1:8080;
+      }
+
+      # 以/upload开头的请求
+      location ^~ /upload/ {
+        root  /opt/dir/;
+        expires   7d;
+      }
+    }
+
+9.nginx负载均衡配置
+  
+  在http节点下配置服务器列表
+
+    http {
+      # upstream模块：配置反向代理服务器组，Nginx会根据配置，将请求分发给组里的某一台服务器。serverGroup是服务器组的名称.
+      upstream serverGroup {
+        server 192.168.0.100:8080;
+        server 192.168.0.101:8080;
+      }
+      # serverGroup内部的server指令：配置处理请求的服务器IP或域名，端口可选，不配置默认使用80端口。通过上面的配置(默认的是轮询策略,把每个请求逐一分配到不同的server，如果分配到的server不可用，则分配到下一个，直到可用)，Nginx默认将请求依次分配给100，101来处理，可以通过修改下面这些参数来改变默认的分配策略：
+
+      1.weight权重,默认为1，将请求平均分配给每台server.值越大，则被访问的概率越大.下面标示101访问数量是100的2倍
+      upstream serverGroup {
+        server 192.168.0.100:8080 weight=1;
+        server 192.168.0.101:8080 weight=2 max_fails=3 fail_timeout=15;
+        server 192.168.0.102:8080 down; #down 表示当前服务器不参与负载均衡，也就是说不会被访问到
+        server 192.168.0.103:8080 backup; #backup 表示备份机，所有服务器挂了之后才会生效
+      }
+      max_fails:默认为1。某台Server允许请求失败的次数，超过最大次数后，在fail_timeout时间内，新的请求将不会分配给这台机器。如果设置为0，Nginx会将这台Server置为永久无效状态，然后将请求发给定义了proxy_next_upstream fastcgi_next_upstream, uwsgi_next_upstream, scgi_next_upstream, and memcached_next_upstream指令来处理这次错误的请求
+      fail_timeout:默认为10秒。某台Server达到max_fails次失败请求后，在fail_timeout期间内，nginx会认为这台Server暂时不可用，不会将请求分配给它
+
+      2.最少连接,把请求分配到连接数最少的server
+      upstream serverGroup {
+        least_conn;
+        server 192.168.0.100:8080;
+        server 192.168.0.101:8080;
+      }
+
+      3.ip_hash,根据访问客户端ip的hash值分配，这样同一客户端的请求都会被分配到同一个server上，如果牵扯到session的问题，用这个是最好的选择
+      upstream serverGroup {
+        ip_hash;
+        server 192.168.0.100:8080;
+        server 192.168.0.101:8080;
+      }
+    }
+
+  在server节点下配置proxy_pass
+
+    server {
+        listen  80;
+        server_name serverGroup;
+        location / {
+          proxy_pass   http://serverGroup; # 表示将所有请求转发到tomcats服务器组中配置的某一台服务器上
+        }
+    }
