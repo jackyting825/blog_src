@@ -32,6 +32,12 @@
   </div>
 </div>
 
+<div style="padding-left: 2rem; margin: 0.5rem auto;">
+  <iframe width="384" scrolling="no" height="60" frameborder="0" allowtransparency="true"
+ src="//i.tianqi.com/index.php?c=code&id=12&color=%23002060&bgc=%23FFFFFF&bdc=%23&icon=1&num=1&site=12">
+ </iframe>
+</div>
+
 <nav class="site-nav">
   {% set hasSearch = theme.swiftype_key || theme.algolia_search.enable || theme.tinysou_Key || theme.local_search.enable %}
 

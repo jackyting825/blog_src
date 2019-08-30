@@ -10,10 +10,34 @@
   -webkit-transform: none;
 }
 
+@media (min-device-aspect-ratio: 16/9) { // 屏幕宽高比例
+  .sidebar-inner {
+  //padding: 20px 10px 0;
+    box-sizing: border-box;
+    margin-top: 0 !important;
+    width: 240px;
+    color: $text-color;
+    background: white;
+    box-shadow: $box-shadow;
+    border-radius: $border-radius;
+    if (hexo-config('motion.enable') and hexo-config('motion.transition.sidebar')) { opacity: 0; }
+
+    &.affix {
+      position: fixed;
+      top: $sidebar-offset;
+    }
+
+    &.affix-bottom {
+      position: absolute;
+    }
+
+  }
+}
 
 .sidebar-inner {
 //padding: 20px 10px 0;
   box-sizing: border-box;
+  margin-top: 2.5rem;
   width: 240px;
   color: $text-color;
   background: white;
