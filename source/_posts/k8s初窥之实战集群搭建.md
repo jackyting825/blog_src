@@ -121,6 +121,8 @@ master节点初始化
     systemctl restart containerd
 ```
 
+>Containerd是一个开源的容器运行时管理器，用于管理容器的生命周期，包括容器的创建、启动、停止、暂停和销毁。它是Docker Engine的核心组件之一，也是Kubernetes、CRI-O等容器平台的基础组件。k8s早期版本(1.23之前)采用Docker作为容器运行时；docker作为k8s容器运行时，调用关系为：kubelet --> dockershim （在 kubelet 进程中） --> dockerd --> containerd；而containerd 作为 k8s 容器运行时，调用关系为：kubelet --> cri plugin（在 containerd 进程中） --> containerd；作为一个纯粹的容器运行时，Containerd被设计为更加符合K8s的架构和需求。它具有更小的资源占用，更快的启动时间，以及更好的性能表现。所以，节点只要装好containerd，也能运行k8s。(前文已装好docker(docker内含了containerd))
+
 执行上述操作后，再次执行kubeadm init命令，等一会后，k8s集群就初始化成功了。
 
 
