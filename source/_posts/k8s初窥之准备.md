@@ -185,3 +185,10 @@ Install the yum-utils package (which provides the yum-config-manager utility) an
                   "registry-mirrors": ["https://registry.cn-hangzhoualiyuncs.com"]
                 }
 ```
+
+重启docker
+
+```bash
+  [root@master ~]# systemctl daemon-reload
+  [root@master ~]# systemctl restart docker
+```
