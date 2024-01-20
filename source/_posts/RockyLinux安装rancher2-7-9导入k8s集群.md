@@ -21,7 +21,7 @@ tags:
   sudo docker run --privileged -d --restart=unless-stopped -p 80:80 -p 443:443 rancher/rancher:stable
 ```
 
->截止目前为止(2024-01-20)，如果把镜像版本更改为rancher:2.7.9，会提示找不到对应镜像的，所以直接拷贝官网的staled
+>截止目前为止(2024-01-20)，如果把镜像版本更改为rancher:2.7.9，会提示找不到对应镜像的，所以直接拷贝官网的stable版本
 
   ![](/images/rancher_not_found.jpeg)
 
