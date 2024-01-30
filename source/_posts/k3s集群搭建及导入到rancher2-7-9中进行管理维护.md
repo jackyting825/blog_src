@@ -1,5 +1,5 @@
 ---
-title: k3s集群搭建及导入rancher2.7.9
+title: k3s集群搭建及导入到rancher2.7.9中进行管理维护
 date: 2024-01-29 21:09:51
 tags:
   - k8s 
