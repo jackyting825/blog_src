@@ -167,6 +167,13 @@ Install the yum-utils package (which provides the yum-config-manager utility) an
 
 #### Install Docker Engine 安装docker引擎
 
+>注： 自2024年6月起，docker官方地址已经完全被墙了，国内安装docker需要添加国内的docker仓库源了
+
+```bash 
+[root@master ~]# yum-config-manager --add--repo http://mirrors.aliyun.com/docker-ce/linux/centos/docker-ce.repo //  阿里镜像源
+
+```
+
 ```bash
   [root@master ~]# yum install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin  # 安装docker
   [root@master ~]# systemctl start docker  # 启动docker
@@ -182,7 +189,7 @@ Install the yum-utils package (which provides the yum-config-manager utility) an
 ```bash
   [root@master ~]# vim /etc/docker/daemon.json
                 {
-                  "registry-mirrors": ["https://registry.cn-hangzhoualiyuncs.com"]
+                  "registry-mirrors": ["https://xxxx.mirror.aliyuncs.com"] // xxxx替换为自己的镜像仓库地址
                 }
 ```
 
@@ -191,4 +198,42 @@ Install the yum-utils package (which provides the yum-config-manager utility) an
 ```bash
   [root@master ~]# systemctl daemon-reload
   [root@master ~]# systemctl restart docker
+```
+
+
+>注： 自2024年6月起，国内各大docker镜像仓库都不能访问了，拉取镜像需要科学上网；Docker容器和守护进程运行在一个隔离的环境中，默认情况下不会继承主机系统的代理设置，所以需要对其进行设置；docker代理分为docker-client的代理和docker-daemon的代理;
+
+client的代理可直接在/etc/docker/daemon.json文件中直接配置:
+```json 
+{
+  "proxies": {
+      "default": {
+        "httpProxy":"",
+        "httpsProxy"："",
+        "noproxy"; "localhost,127.0.0.1,.example.com"
+      }
+  }
+}
+```
+
+daemon的代理需要在系统服务中进行配置:
+
+创建一个 Docker 配置文件（如果不存在），并在其中添加代理设置
+```bash
+[root@master ~]# mkdir  /etc/systemd/system/docker.service.d 
+[root@master ~]# vim /etc/systemd/system/docker.service.d/proxy.conf 
+```
+在文件中添加以下内容：
+```bash
+[Service]
+Environment="HTTP_PROXY=http://proxy_server:port"
+Environment="HTTPS_PROXY=http://proxy_server:port"
+Environment="NO_PROXY=localhost,127.0.0.1"
+```
+重启docker即可
+
+```bash
+  [root@master ~]# systemctl daemon-reload
+  [root@master ~]# systemctl restart docker
+  [root@master ~]# docker info // 查看代理配置是否生效
 ```
