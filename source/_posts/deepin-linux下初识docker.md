@@ -138,6 +138,20 @@ docker 安装后,默认是没有任何镜像的,如果安装后执行了 docker 
 
 `docker rm nginx1.0` // 删除 nginx1.0 容器
 
+##### docker常用清除相关缓存命令
+
+`docker image prune` // 清除悬空镜像（没有标签的镜像，通常是构建过程中的中间层）
+
+`docker image prune -a` // 清除所有未使用的镜像
+
+`docker network prune` // 清除未使用的网络
+
+`docker volume prune` // 清除未使用的卷
+
+`docker container prune` // 清除所有停止的容器
+
+`docker builder prune` // 清除所有未使用的构建缓存
+
 #### docker 网络
 
 linux 使用 namespace 来进行资源的隔离 ，docker 的隔离性
