@@ -170,9 +170,11 @@ Install the yum-utils package (which provides the yum-config-manager utility) an
 >注： 自2024年6月起，docker官方地址已经完全被墙了，国内安装docker需要添加国内的docker仓库源了
 
 ```bash 
-[root@master ~]# yum-config-manager --add--repo http://mirrors.aliyun.com/docker-ce/linux/centos/docker-ce.repo //  阿里镜像源
+[root@master ~]# yum-config-manager --add-repo http://mirrors.aliyun.com/docker-ce/linux/centos/docker-ce.repo //  阿里镜像源
 
 ```
+    yum安装包指定版本的命令
+    yum install [package-name]-[version].[architecture] // 如：yum install docker-ce-27.2.0
 
 ```bash
   [root@master ~]# yum install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin  # 安装docker
